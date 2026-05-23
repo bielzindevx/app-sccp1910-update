@@ -1,0 +1,33 @@
+name: Atualizar Releases Automaticamente
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '*.apk'
+
+jobs:
+  atualizar-releases:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Baixar arquivos
+        uses: actions/checkout@v4
+
+      - name: Atualizar Release TV
+        run: |
+          if [ -f sccp1910-tv.apk ]; then
+            gh release upload sccp1910tv sccp1910-tv.apk --clobber
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Atualizar Release Mobile
+        run: |
+          if [ -f sccp1910-mobile.apk ]; then
+            gh release upload sccp1910mobile sccp1910-mobile.apk --clobber
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
