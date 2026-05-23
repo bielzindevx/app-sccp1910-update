@@ -19,7 +19,15 @@ jobs:
       - name: Atualizar Release TV
         run: |
           if [ -f sccp1910-tv.apk ]; then
+            # Pega a mensagem do commit (Ex: "app tv 0.6.4")
+            MSG="${{ github.event.head_commit.message }}"
+            # Extrai apenas a ultima palavra, que é a versao (Ex: "0.6.4")
+            VERSAO="${MSG##* }"
+            
+            # Faz o upload substituindo o APK
             gh release upload sccp1910tv sccp1910-tv.apk --clobber
+            # Edita o titulo e a descricao do release
+            gh release edit sccp1910tv --title "Versão TV $VERSAO" --notes "$MSG"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -27,7 +35,15 @@ jobs:
       - name: Atualizar Release Mobile
         run: |
           if [ -f sccp1910-mobile.apk ]; then
+            # Pega a mensagem do commit (Ex: "app mobile 0.5.6")
+            MSG="${{ github.event.head_commit.message }}"
+            # Extrai apenas a versao (Ex: "0.5.6")
+            VERSAO="${MSG##* }"
+            
+            # Faz o upload substituindo o APK
             gh release upload sccp1910mobile sccp1910-mobile.apk --clobber
+            # Edita o titulo e a descricao do release
+            gh release edit sccp1910mobile --title "Versão Mobile $VERSAO" --notes "$MSG"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
